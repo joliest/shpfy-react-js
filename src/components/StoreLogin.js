@@ -6,42 +6,52 @@ import axios from 'axios';
 import './StoreLogin.scss'
 import { NGROK } from '../constants';
 
-const StoreLogin = () => {
-    const loginToShopify = async () => {
+class StoreLogin extends React.Component {
+    state = {
+        installUrl: null,
+    };
+
+    loginToShopify = async () => {
         try {
             const url = `${NGROK}/shopify?shop=sample-store-1ventory.myshopify.com`;
-            const response = await axios.get(url);
-            console.log(response)
+            // const response = await axios.get(url);
+            // const { installUrl } = response.data;
+            // console.log(installUrl)
+            // await axios.get(installUrl)
+            window.location.replace(url)
         } catch (e) {
             console.error('Something went wrong. ::: ', e)
         }
-    };
-    return (
-        <div className="store-login">
-            <Box component="form" noValidate autoComplete="off"
-            >
-                <TextField
-                    id="outlined-basic"
-                    className="text-field"
-                    label="Enter Shopify store"
-                    variant="outlined"
-                    InputLabelProps={{
-                        shrink: true
-                    }}
-                />
-                <Box>
-                    <Button
-                        className="button"
-                        variant="contained"
-                        size="large"
-                        onClick={loginToShopify}
-                    >
-                        Login to Sample Shopify App
-                    </Button>
+    }
+
+    render() {
+        const { installUrl } = this.state;
+        return (
+            <div className="store-login">
+                <Box component="form" noValidate autoComplete="off">
+                    <TextField
+                        id="outlined-basic"
+                        className="text-field"
+                        label="Enter Shopify store"
+                        variant="outlined"
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                    />
+                    <Box>
+                        <Button
+                            className="button"
+                            variant="contained"
+                            size="large"
+                            onClick={this.loginToShopify}
+                        >
+                            Login to Sample Shopify App
+                        </Button>
+                    </Box>
                 </Box>
-            </Box>
-        </div>
-    )
+            </div>
+        )
+    }
 }
 
 export default StoreLogin;
