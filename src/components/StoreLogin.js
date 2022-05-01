@@ -3,10 +3,15 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import './StoreLogin.scss'
-import {Link} from "react-router-dom";
+import {NGROK} from "../constants";
+
 
 class StoreLogin extends React.Component {
     render() {
+        const url = `${NGROK}/shopify?shop=sample-store-1ventory.myshopify.com`;
+        const handleClick = () => {
+            window.location.replace(url)
+        }
         return (
             <div className="store-login">
                 <Box component="form" noValidate autoComplete="off">
@@ -21,11 +26,10 @@ class StoreLogin extends React.Component {
                     />
                     <Box>
                         <Button
-                            component={Link}
                             className="button"
                             variant="contained"
                             size="large"
-                            to="/shopify-install"
+                            onClick={handleClick}
                         >
                             Login to Sample Shopify App
                         </Button>
