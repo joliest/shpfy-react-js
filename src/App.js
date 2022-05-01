@@ -1,25 +1,22 @@
 import './App.css';
 import StoreLogin from "./components/StoreLogin";
 import {
-    BrowserRouter as Router,
-    Switch,
+    BrowserRouter,
+    Routes,
     Route,
 } from 'react-router-dom';
+import ShopifyInstall from "./components/ShopifyInstall";
 
 function App() {
   return (
-      <Router>
-          <div className="App">
-              <Switch>
-                  <Route path="/shopify/callback">
-                      <StoreLogin />
-                  </Route>
-                  <Route path="/" exact>
-                      <StoreLogin />
-                  </Route>
-              </Switch>
-          </div>
-      </Router>
+      <div className="App">
+          <BrowserRouter>
+              <Routes>
+                  <Route path="/shopify-install" element={<ShopifyInstall />} />
+                  <Route path="/" element={<StoreLogin />} />
+              </Routes>
+          </BrowserRouter>
+      </div>
   );
 }
 
