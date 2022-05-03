@@ -5,11 +5,16 @@ import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
 import './StoreLogin.scss'
 import {NGROK} from "../constants";
+import Products from "./Products";
 
 const MY_SHOPIFY_DOT_COM = '.myshopify.com';
 class StoreLogin extends React.Component {
     state = {
         storeName: null,
+    }
+
+    componentDidMount() {
+
     }
 
     handleOnChange = (e) => {
@@ -54,6 +59,7 @@ class StoreLogin extends React.Component {
                         </Button>
                     </Box>
                 </Box>
+                <Products />
             </div>
         )
     }
