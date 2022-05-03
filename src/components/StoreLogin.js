@@ -6,15 +6,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import './StoreLogin.scss'
 import {NGROK} from "../constants";
 import Products from "./Products";
+import axios from "axios";
 
 const MY_SHOPIFY_DOT_COM = '.myshopify.com';
 class StoreLogin extends React.Component {
     state = {
         storeName: null,
-    }
-
-    componentDidMount() {
-
+        products: [],
     }
 
     handleOnChange = (e) => {
@@ -29,11 +27,22 @@ class StoreLogin extends React.Component {
         }
     }
 
+    getProducts = async () => {
+        const { storeName } = this.state;
+        try {
+            const response = await axios.get(`${NGROK}/products?shop=${storeName}.myshopify.com`)
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     render() {
         const { storeName } = this.state;
+        const isButtonDisabled = !storeName;
         return (
             <div className="store-login">
-                <Box component="form" noValidate autoComplete="off">
+                <Box component="form" noValidate autoComplete="on">
                     <TextField
                         id="outlined-basic"
                         className="text-field"
@@ -53,13 +62,16 @@ class StoreLogin extends React.Component {
                             variant="contained"
                             size="large"
                             onClick={this.handleClick}
-                            disabled={!storeName}
+                            disabled={isButtonDisabled}
                         >
                             Login to Sample Shopify App
                         </Button>
                     </Box>
                 </Box>
-                <Products />
+                <Products
+                    getProducts={this.getProducts}
+                    isButtonDisabled={isButtonDisabled}
+                />
             </div>
         )
     }

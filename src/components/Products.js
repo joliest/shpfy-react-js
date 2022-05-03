@@ -5,6 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 const Item = () => {
     return (
@@ -38,9 +39,24 @@ const Item = () => {
     )
 }
 
-const Products = () => {
+const Products = (props) => {
+    const {
+        getProducts,
+        isButtonDisabled,
+    } = props;
     return (
         <Box mt={5} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+            <Box>
+                <Button
+                    className="button"
+                    variant="contained"
+                    size="large"
+                    onClick={getProducts}
+                    disabled={isButtonDisabled}
+                >
+                    Display Products
+                </Button>
+            </Box>
             <Stack spacing={2} mt={5}>
                 <Item />
             </Stack>
