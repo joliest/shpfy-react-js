@@ -11,7 +11,7 @@ import axios from "axios";
 const MY_SHOPIFY_DOT_COM = '.myshopify.com';
 class StoreLogin extends React.Component {
     state = {
-        storeName: null,
+        storeName: 'sample-store-1ventory',
         products: [],
     }
 
@@ -54,6 +54,7 @@ class StoreLogin extends React.Component {
                         InputLabelProps={{
                             shrink: true
                         }}
+                        value={storeName}
                         onChange={this.handleOnChange}
                     />
                     <Box>
@@ -69,6 +70,7 @@ class StoreLogin extends React.Component {
                     </Box>
                 </Box>
                 <Products
+                    storeName={storeName}
                     getProducts={this.getProducts}
                     isButtonDisabled={isButtonDisabled}
                 />

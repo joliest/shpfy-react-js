@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useEffect, useState} from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -6,32 +6,40 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import axios from "axios";
+import {NGROK} from "../constants";
 
-const Item = () => {
+const Item = (props) => {
+    const {
+        title,
+        image,
+        product_type,
+    } = props;
+    console.log(props)
     return (
-        <Card sx={{ display: 'flex', width: 750, }}>
+        <Card sx={{ display: 'flex', width: 750 }}>
             <CardMedia
                 component="img"
                 sx={{ width: 200 }}
-                image="https://cdn.shopify.com/s/files/1/0624/9316/3779/products/31n6VU6xolL_635e4a8f-94c0-4fb1-b94e-df52e8e78ced.jpg?v=1651536879"
+                image={image.src}
                 alt="Live from space album cover"
             />
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ width: '100%'}}>
                 <CardContent>
                     <Typography
                         component="div"
-                        variant="h5"
+                        variant="subtitle1"
                         sx={{ textAlign: 'left' }}
                     >
-                        Live From Space
+                        {title}
                     </Typography>
                     <Typography
-                        variant="subtitle1"
+                        variant="subtitle2"
                         color="text.secondary"
                         component="div"
                         sx={{ textAlign: 'left' }}
                     >
-                        Mac Miller
+                        {product_type}
                     </Typography>
                 </CardContent>
             </Box>
@@ -42,10 +50,26 @@ const Item = () => {
 const Products = (props) => {
     const {
         getProducts,
+        storeName,
         isButtonDisabled,
     } = props;
+
+    const [products, setProducts] = useState(null);
+
+    useEffect(() => {
+        if (products === null) {
+            axios.get(`${NGROK}/products?shop=${storeName}.myshopify.com`)
+                .then((response) => {
+                    const products = response.data.products || [];
+                    setProducts(products)
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        }
+    }, []);
     return (
-        <Box mt={5} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+        <Box mt={5} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
             <Box>
                 <Button
                     className="button"
@@ -57,8 +81,17 @@ const Products = (props) => {
                     Display Products
                 </Button>
             </Box>
-            <Stack spacing={2} mt={5}>
-                <Item />
+            <Stack spacing={2} mt={5} sx={{ alignItems: 'center' }}>
+                {
+                    products ? (
+                        products.map((product) => {
+                            const { id, ...rest } = product;
+                            return (
+                                <Item key={id} {...rest} />
+                            )
+                        })
+                    ) : null
+                }
             </Stack>
         </Box>
     );
