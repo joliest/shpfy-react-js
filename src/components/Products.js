@@ -8,12 +8,26 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import {NGROK} from "../constants";
+import {FormControl, Grid, InputLabel, MenuItem, Select} from "@mui/material";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+
+const serialize = (obj) => {
+    const str = [];
+    for (let p in obj)
+        if (obj.hasOwnProperty(p)) {
+            str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+        }
+    return str.join('&');
+}
 
 const Item = (props) => {
     const {
+        vendor,
         title,
-        image,
+        image = {},
         product_type,
+        body_html,
     } = props;
     console.log(props)
     return (
@@ -39,8 +53,26 @@ const Item = (props) => {
                         component="div"
                         sx={{ textAlign: 'left' }}
                     >
-                        {product_type}
+                        {product_type} ({vendor})
                     </Typography>
+                    <Box>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            component="div"
+                            sx={{
+                                textAlign: 'left',
+                                height: 40,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                display: '-webkit-box',
+                                WebkitLineClamp: '2',
+                                WebkitBoxOrient: 'vertical',
+                            }}
+                        >
+                            {body_html}
+                        </Typography>
+                    </Box>
                 </CardContent>
             </Box>
         </Card>
@@ -55,6 +87,8 @@ const Products = (props) => {
     } = props;
 
     const [products, setProducts] = useState(null);
+    const [filterType, setFilterType] = useState('handle');
+    const [filterValue, setFilterValue] = useState('');
 
     useEffect(() => {
         if (products === null) {
@@ -68,19 +102,71 @@ const Products = (props) => {
                 })
         }
     }, []);
+
+    const onSelectChange = (e) => {
+        setFilterType(e.target.value)
+    }
+    const handleSetFilterValue = (e) => {
+        setFilterValue(e.target.value)
+    }
+
+    const handleOnSearch = () => {
+        axios.get(`${NGROK}/products?shop=${storeName}.myshopify.com&${filterType}=${filterValue}`)
+            .then((response) => {
+                const products = response.data.products || [];
+                setProducts(products)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }
     return (
-        <Box mt={5} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-            <Box>
-                <Button
-                    className="button"
-                    variant="contained"
-                    size="large"
-                    onClick={getProducts}
-                    disabled={isButtonDisabled}
-                >
-                    Display Products
-                </Button>
-            </Box>
+        <Box
+            mt={5}
+            style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}
+        >
+            <Grid container spacing={2} style={{ justifyContent: 'center' }}>
+                <Grid item xs={2}>
+                    <FormControl style={{ width: '100%' }}>
+                        <InputLabel>Filter</InputLabel>
+                        <Select
+                            labelId="filter"
+                            id="filter"
+                            value={filterType}
+                            label="Filter"
+                            onChange={onSelectChange}
+                        >
+                            <MenuItem value="handle">Handle</MenuItem>
+                            <MenuItem value="vendor">Vendor</MenuItem>
+                            <MenuItem value="status">Status</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        id="outlined-basic"
+                        label="Enter Filter value"
+                        variant="outlined"
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                        sx={{ width: '100%', flex: 2 }}
+                        value={filterValue}
+                        onChange={handleSetFilterValue}
+                    />
+                </Grid>
+                <Grid item xs={2}>
+                    <Button
+                        style={{ height: '100%', width: '100%' }}
+                        variant="contained"
+                        size="large"
+                        onClick={handleOnSearch}
+                        disabled={isButtonDisabled || !filterValue}
+                    >
+                        Search
+                    </Button>
+                </Grid>
+            </Grid>
             <Stack spacing={2} mt={5} sx={{ alignItems: 'center' }}>
                 {
                     products ? (
