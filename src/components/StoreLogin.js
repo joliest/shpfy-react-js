@@ -6,7 +6,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import './StoreLogin.scss'
 import {NGROK} from "../constants";
 import Products from "./Products";
-import axios from "axios";
 
 const MY_SHOPIFY_DOT_COM = '.myshopify.com';
 class StoreLogin extends React.Component {
@@ -24,16 +23,6 @@ class StoreLogin extends React.Component {
         if (storeName) {
             const url = `${NGROK}/shopify?shop=${storeName}.myshopify.com`;
             window.location.replace(url);
-        }
-    }
-
-    getProducts = async () => {
-        const { storeName } = this.state;
-        try {
-            const response = await axios.get(`${NGROK}/products?shop=${storeName}.myshopify.com`)
-            console.log(response)
-        } catch (error) {
-            console.log(error)
         }
     }
 
@@ -71,7 +60,6 @@ class StoreLogin extends React.Component {
                 </Box>
                 <Products
                     storeName={storeName}
-                    getProducts={this.getProducts}
                     isButtonDisabled={isButtonDisabled}
                 />
             </div>

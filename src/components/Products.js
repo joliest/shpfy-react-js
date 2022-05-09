@@ -10,16 +10,8 @@ import axios from "axios";
 import {NGROK} from "../constants";
 import {FormControl, Grid, InputLabel, MenuItem, Select} from "@mui/material";
 import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-
-const serialize = (obj) => {
-    const str = [];
-    for (let p in obj)
-        if (obj.hasOwnProperty(p)) {
-            str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
-        }
-    return str.join('&');
-}
+import {useLocation} from "react-router";
+import {useSearchParams} from "react-router-dom";
 
 const Item = (props) => {
     const {
@@ -29,7 +21,6 @@ const Item = (props) => {
         product_type,
         body_html,
     } = props;
-    console.log(props)
     return (
         <Card sx={{ display: 'flex', width: 750 }}>
             <CardMedia
@@ -81,7 +72,6 @@ const Item = (props) => {
 
 const Products = (props) => {
     const {
-        getProducts,
         storeName,
         isButtonDisabled,
     } = props;
@@ -89,6 +79,9 @@ const Products = (props) => {
     const [products, setProducts] = useState(null);
     const [filterType, setFilterType] = useState('handle');
     const [filterValue, setFilterValue] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const shop = searchParams.get('test');
 
     useEffect(() => {
         if (products === null) {
