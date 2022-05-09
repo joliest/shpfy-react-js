@@ -6,10 +6,14 @@ import InputAdornment from '@mui/material/InputAdornment';
 import './StoreLogin.scss'
 import {NGROK} from "../constants";
 import Products from "./Products";
+import {useSearchParams} from "react-router-dom";
 
 const MY_SHOPIFY_DOT_COM = '.myshopify.com';
 const StoreLogin = () => {
-    const [storeName, setStoreName] = useState('sample-store-1ventory');
+    const [searchParams] = useSearchParams();
+    const shop = searchParams.get('shop');
+    const store = shop ? shop.replace(MY_SHOPIFY_DOT_COM, '') : 'sample-store-1ventory';
+    const [storeName, setStoreName] = useState(store);
     const isButtonDisabled = !storeName;
 
 

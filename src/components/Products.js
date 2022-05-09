@@ -10,14 +10,12 @@ import axios from "axios";
 import {NGROK} from "../constants";
 import {FormControl, Grid, InputLabel, MenuItem, Select} from "@mui/material";
 import TextField from "@mui/material/TextField";
-import {useLocation} from "react-router";
-import {useSearchParams} from "react-router-dom";
 
 const Item = (props) => {
     const {
         vendor,
         title,
-        image = {},
+        image,
         product_type,
         body_html,
     } = props;
@@ -26,7 +24,7 @@ const Item = (props) => {
             <CardMedia
                 component="img"
                 sx={{ width: 200 }}
-                image={image.src}
+                image={image ? image.src : ''}
                 alt="Live from space album cover"
             />
             <Box sx={{ width: '100%'}}>
@@ -79,9 +77,6 @@ const Products = (props) => {
     const [products, setProducts] = useState(null);
     const [filterType, setFilterType] = useState('handle');
     const [filterValue, setFilterValue] = useState('');
-    const [searchParams, setSearchParams] = useSearchParams();
-
-    const shop = searchParams.get('test');
 
     useEffect(() => {
         if (products === null) {
