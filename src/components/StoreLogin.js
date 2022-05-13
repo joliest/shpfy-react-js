@@ -53,7 +53,7 @@ const StoreLogin = () => {
                         onClick={handleClick}
                         disabled={isButtonDisabled}
                     >
-                        Login to Sample Shopify App
+                        Store Login
                     </Button>
                 </Box>
             </Box>
